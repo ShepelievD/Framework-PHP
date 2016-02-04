@@ -39,8 +39,7 @@ class Loader {
                 Loader::$namespace[ $namespace ] = $path;
             }
         }
-
-        var_dump(Loader::$namespace);
+        
     }
 
     public static function load ( $className )
