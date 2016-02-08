@@ -3,7 +3,7 @@
 /**
  * Class Loader
  *
- * Realisation Singleton pattern
+ * Realisation of Singleton pattern
  */
 
 class Loader {
@@ -12,6 +12,8 @@ class Loader {
     protected static $namespace = array();
 
     /**
+     * The method allows to create only one instance
+     *
      * @return Loader|null
      */
     public static function getInstance()
@@ -32,10 +34,11 @@ class Loader {
     }
 
     /**
+     * Create relation between namespace and path
+     *
      * @param $namespace
      * @param $path
      *
-     * Create relation between namespace and path
      */
     public static function addNamespacePath( $namespace, $path )
     {
@@ -49,7 +52,7 @@ class Loader {
     {
         $segments = explode("\\", $className);
 
-        $path = __DIR__.'/'.'Controller'.'/'.$segments[1].'.php';
+        $path = __DIR__.'/'.$segments[1].'.php';
 
         if( file_exists( $path )) {
             include_once( $path );
