@@ -52,7 +52,16 @@ class Loader {
     {
         $segments = explode("\\", $className);
 
-        $path = __DIR__.'/'.$segments[1].'.php';
+        $path = __DIR__;
+
+        foreach( $segments as $key => $value) {
+            if( $key == 0) {
+                continue;
+            }
+            $path .= '/'.$value;
+        }
+
+        $path .= '.php';
 
         if( file_exists( $path )) {
             include_once( $path );
