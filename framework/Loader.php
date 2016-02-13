@@ -42,7 +42,7 @@ class Loader {
      */
     public static function addNamespacePath( $namespace, $path )
     {
-        Loader::$namespace[ $namespace ] = $path;
+        self::$namespace[ $namespace ] = $path;
     }
 
     /**
@@ -50,23 +50,23 @@ class Loader {
      */
     public static function load ( $className )
     {
+
         $segments = explode("\\", $className);
 
-        $path = __DIR__;
-
-        foreach( $segments as $key => $value) {
-            if( $key == 0) {
-                continue;
-            }
-            $path .= '/'.$value;
+        $pathDirectory = self::$namespace[$segments[0].'\\'];
+        for( $i = 1; $i < count($segments) - 1; $i++ ) {
+            $pathDirectory = $pathDirectory.'/'.$segments[$i];
         }
+        $fileName = '/'.$segments[count($segments) - 1].'.php';
 
-        $path .= '.php';
-
-        if( file_exists( $path )) {
-            include_once( $path );
+        if(is_dir($pathDirectory)) {
+            $filePath = $pathDirectory.$fileName;
+            if( file_exists( $filePath )) {
+                include_once( $filePath );
+            }
         }
     }
 }
 
 Loader::getInstance();
+Loader::addNamespacePath('Framework\\', __DIR__);
