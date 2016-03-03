@@ -34,8 +34,9 @@ class Router{
 	 * @return null
 	 */
 
-	public function parseRoute($url) {
+	public function parseRoute($url = '') {
 
+		$url = empty( $url ) ? $_SERVER[ 'REQUEST_URI' ] : $url;
 		$route_found = null;
 
 		foreach (self::$map as $route) {
@@ -49,9 +50,12 @@ class Router{
 				$params = array_map('urldecode', $params);
 				$params = array_combine($param_names, $params);
 
-				array_shift($params); // Get rid of 0 element
+				array_shift($params);
 				$route_found = $route;
 				$route_found['params'] = $params;
+
+				unset($route_found['pattern']);
+				unset($route_found['_requirements']);
 
 				break;
 			}
