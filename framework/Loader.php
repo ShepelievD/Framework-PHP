@@ -34,6 +34,13 @@ class Loader {
     }
 
     /**
+     * Blocked __clone for protecting the one instance.
+     */
+    private function __clone()
+    {
+    }
+
+    /**
      * Create relation between namespace and path
      *
      * @param $namespace
@@ -54,9 +61,11 @@ class Loader {
         $segments = explode("\\", $className);
 
         $pathDirectory = self::$namespace[$segments[0].'\\'];
+
         for( $i = 1; $i < count($segments) - 1; $i++ ) {
             $pathDirectory = $pathDirectory.'/'.$segments[$i];
         }
+
         $fileName = '/'.$segments[count($segments) - 1].'.php';
 
         if(is_dir($pathDirectory)) {

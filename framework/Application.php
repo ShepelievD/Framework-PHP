@@ -2,9 +2,11 @@
 
 namespace Framework;
 
-use Framework\Exception\BadResponseTypeException;
-use Framework\Router\Router;
 use Framework\Exception\HttpNotFoundException;
+use Framework\Exception\BadResponseTypeException;
+use Framework\Response\Response;
+use Framework\Router\Router;
+
 
 /**
  * Class Application
