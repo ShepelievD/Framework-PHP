@@ -14,7 +14,7 @@ class Loader {
     /**
      * The method allows to create only one instance
      *
-     * @return Loader|null
+     * @return instance of Loader
      */
     public static function getInstance()
     {
@@ -57,7 +57,6 @@ class Loader {
      */
     public static function load ( $className )
     {
-
         $segments = explode("\\", $className);
 
         $pathDirectory = self::$namespace[$segments[0].'\\'];

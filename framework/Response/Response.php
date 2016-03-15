@@ -44,11 +44,7 @@ class Response {
 
     public static $codeMessage = array(
         200 => 'OK',
-        301 => 'MOVED PERMANENTLY',
         302 => 'FOUND',
-        400 => 'BAD REQUEST',
-        401 => 'UNATHORIZED',
-        403 => 'FORBIDDEN',
         404 => 'NOT FOUND',
     );
 

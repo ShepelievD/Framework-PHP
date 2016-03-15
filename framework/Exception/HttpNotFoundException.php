@@ -9,6 +9,9 @@ namespace Framework\Exception;
  * @package Framework\Exception
  */
 
-class HttpNotFoundException extends \Exception
-{
+class HttpNotFoundException extends \Exception {
+    public function getParams( ) {
+        $params = [ 'message' => $this->getMessage(), 'code' => '404'];
+        return $params;
+    }
 }

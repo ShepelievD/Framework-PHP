@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: shepelev
- * Date: 03.03.16
- * Time: 16:14
- */
 
 namespace Framework\Exception;
 
@@ -16,6 +10,9 @@ namespace Framework\Exception;
  */
 
 
-class BadResponseTypeException extends \Exception
-{
+class BadResponseTypeException extends \Exception {
+    public function getParams( ) {
+        $params = [ 'message' => $this->getMessage(), 'code' => '500'];
+        return $params;
+    }
 }

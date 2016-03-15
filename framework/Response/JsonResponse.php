@@ -33,7 +33,7 @@ class JsonResponse extends Response {
     }
 
     /**
-     * Outputs a content
+     * Outputs a content/
      */
     private function getContent() {
         echo json_encode($this->content, JSON_UNESCAPED_UNICODE);

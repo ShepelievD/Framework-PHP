@@ -67,11 +67,21 @@ class Router{
 	/**
 	 * Create a rout from current params
 	 *
-	 * @param $route_name
-	 * @param array $params
+	 * @param $routeName
+	 * @param null $param
+	 *
+	 * @return string
 	 */
-	public function buildRoute($route_name, $params = array()){
-		// @TODO: buildRoute
+	public function buildRoute($routeName, $param = null){
+
+		if( is_null($param) ) {
+			$uri = self::$map[$routeName]['pattern'];
+		}
+		else {
+			$uri = str_replace('{id}', $param, self::$map[$routeName]['pattern']);
+		}
+
+		return $uri;
 	}
 
 	/**
