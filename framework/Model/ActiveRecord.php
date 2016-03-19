@@ -4,11 +4,29 @@ namespace Framework\Model;
 
 use Framework\DI\Service;
 
+/**
+ * Class ActiveRecord
+ * @package Framework\Model
+ */
+
 abstract class ActiveRecord {
+
+    /**
+     * Returns instance of DB or null
+     *
+     * @return null
+     */
 
     static function getDbConnection() {
         return Service::get('db');
     }
+
+    /**
+     * Serves for finding posts
+     *
+     * @param string $id
+     * @return array
+     */
 
     static function find( $id = 'all' ) {
 
@@ -23,7 +41,7 @@ abstract class ActiveRecord {
             $query->execute();
 
             while ( $row = $query->fetchObject() ) {
-                $result = $row;
+                array_push( $result, $row );
             }
         }
         else {
@@ -35,6 +53,11 @@ abstract class ActiveRecord {
         return $result;
     }
 
+    /**
+     * Serves for saving
+     *
+     * @return mixed
+     */
     static function save() {
 
         $fieldsForSave = '';

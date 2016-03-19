@@ -55,7 +55,6 @@ class Router{
 				$route_found['params'] = $params;
 
 				unset($route_found['pattern']);
-				unset($route_found['_requirements']);
 
 				break;
 			}

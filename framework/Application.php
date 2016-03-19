@@ -6,9 +6,11 @@ use Framework\DI\Service;
 use Framework\Exception\HttpNotFoundException;
 use Framework\Exception\BadResponseTypeException;
 use Framework\Renderer\Renderer;
+use Framework\Request\Request;
 use Framework\Response\Response;
 use Framework\Router\Router;
-
+use Framework\Security\Security;
+use Framework\Session\Session;
 
 
 /**
@@ -23,6 +25,9 @@ class Application {
         if( file_exists( $path )) {
             Service::set('config', include($path));
             Service::set('routes', Service::get('config')['routes']);
+            Service::set('security', new Security());
+            Service::set('session', new Session());
+            Service::set('request', new Request());
 
             $pdoFromConfig = Service::get('config')['pdo'];
             $db = new \PDO( $pdoFromConfig['dns'], $pdoFromConfig['user'], $pdoFromConfig['password']);

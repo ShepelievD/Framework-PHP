@@ -6,50 +6,84 @@ use Framework\DI\Service;
 
 class Renderer {
 
+    /**
+     * Main template
+     *
+     * @var string
+     */
+
     protected $mainTemplate;
+
+    /**
+     * Renderer constructor.
+     * Fills main template
+     */
 
     public function __construct( ){
         $this->mainTemplate = realpath( Service::get('config')['main_layout'] );
     }
 
+    /**
+     * Renders main
+     *
+     * @param $content
+     * @return string
+     */
+
     public function renderMain($content) {
 
-        // @TODO: flush and user
-
         $flush = [];
-        $user = null;
+        $user = Service::get('security')->getUser();
 
         return $this->render($this->mainTemplate, compact('content', 'user', 'flush'), false);
     }
+
+    /**
+     * Renders exceptions
+     *
+     * @param $params
+     */
 
     public function renderException( $params ) {
         $this->render( Service::get('config')['error_505'], $params );
     }
 
+    /**
+     * Renders
+     *
+     * @param $templatePath
+     * @param $data
+     * @param bool|true $wrap
+     * @return string
+     */
+
     public function render($templatePath, $data, $wrap = true){
 
         $templatePath = realpath( $templatePath );
 
-        // @TODO: closers
+        $include = function($controller, $action, $args = array()) {
+            $controllerInstance = new $controller();
+            if ($args === null) {
+                $args = array();
+            }
 
-        $include = function() {
+            return call_user_func_array(array($controllerInstance, $action.'Action'), $args);
         };
 
         $generateToken = function(){
+            $token = md5('solt_string'.uniqid());
+            setcookie('token', $token);
+            echo '<input type="hidden" value="'.$token.'" name="token">';
         };
 
         $getRoute = function($name){
             if( array_key_exists( $name, Service::get('routes'))) {
-                $controller = Service::get('routes')[$name]['pattern'];
-                echo $controller;
+                $uri = Service::get('routes')[$name]['pattern'];
+                echo $uri;
             }
         };
 
-        $data['include'] = $include;
-        $data['generateToken'] = $generateToken;
-        $data['getRoute'] = $getRoute;
-
-        extract($data);
+        extract( $data );
 
         ob_start();
 
