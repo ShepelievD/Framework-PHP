@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dgilan
- * Date: 10/17/14
- * Time: 12:09 PM
- */
 
 namespace Blog\Model;
 
@@ -13,7 +7,7 @@ use Framework\Security\Model\UserInterface;
 
 class User extends ActiveRecord implements UserInterface
 {
-    public $id;
+    //public $id;
     public $email;
     public $password;
     public $role;
