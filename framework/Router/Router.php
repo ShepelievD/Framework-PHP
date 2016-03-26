@@ -14,7 +14,7 @@ class Router{
 	* @var array
 	*/
 
-	protected static $map = array();
+	public static $map = array();
 
 	/**
 	 * Push values in var map for following parsing

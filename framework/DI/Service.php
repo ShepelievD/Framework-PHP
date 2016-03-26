@@ -35,7 +35,7 @@ class Service
 
         $res = null;
 
-        if( array_key_exists( $name, self::$services )) {
+        if( !empty( self::$services[$name] )) {
             $res = self::$services[$name];
         }
 

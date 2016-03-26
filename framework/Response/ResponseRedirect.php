@@ -9,6 +9,8 @@ namespace Framework\Response;
 
 class ResponseRedirect extends Response {
 
+    private $url;
+
     /**
      * ResponseRedirect constructor.
      *
@@ -19,9 +21,8 @@ class ResponseRedirect extends Response {
      */
 
     public function __construct( $url, $content = '', $type = 'text/html', $code = 302 ) {
-
         parent::__construct( $content, $type, $code );
-        $url = trim( $url );
-        $this->setHeader( 'Location: ', $url );
+        $this->url = $url;
+        $this->setHeader('Location', $this->url);
     }
 }

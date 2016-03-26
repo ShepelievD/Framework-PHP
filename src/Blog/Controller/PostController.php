@@ -1,19 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dgilan
- * Date: 10/15/14
- * Time: 12:49 PM
- */
 
 namespace Blog\Controller;
 
 use Blog\Model\Post;
 use Framework\Controller\Controller;
-use Framework\DI\Service;
 use Framework\Exception\DatabaseException;
 use Framework\Exception\HttpNotFoundException;
-use Framework\Request\Request;
 use Framework\Response\Response;
 use Framework\Validation\Validator;
 

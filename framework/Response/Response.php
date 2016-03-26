@@ -18,7 +18,7 @@ class Response {
      * @var array
      */
 
-    protected $headers = array();
+    protected $headers = [];
 
     /**
      * Code of response. At default is 200 that means success

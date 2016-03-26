@@ -53,40 +53,55 @@ abstract class ActiveRecord {
         return $result;
     }
 
+
     /**
      * Serves for saving
      *
      * @return mixed
      */
-    static function save() {
+    public function save() {
 
-        $fieldsForSave = '';
-        $valuesFields = [];
+        $fieldsForSave = get_object_vars($this);
 
-        $table = static::getTable();
+        $columnQueue = '';
+        $valueQueue = '';
 
-        $fields = get_object_vars( $this );
-
-        foreach ( $fields as $column => $value ) {
-            if ( isset( $column )) {
-                $fieldsForSave .= "'" . str_replace("'", '"', $column) . "'" . "=:$column, ";
-                $valuesFields[":$column"] = $value;
-            }
+        foreach ($fieldsForSave as $key => $value) {
+            $columnQueue = $columnQueue . $key . ', ';
+            $valueQueue = $valueQueue . '"' . addslashes(htmlspecialchars( $value )) . '", ';
         }
 
-        $fieldsForSave = substr( $fieldsForSave, 0, -2) ;
+        $columnQueue = substr($columnQueue, 0, -2);
+        $valueQueue = substr($valueQueue, 0, -2);
 
-        $sql = "INSERT INTO " . $table . " SET " . $fieldsForSave;
+        $query = "REPLACE INTO " . static::getTable() . "( " . $columnQueue . ") VALUES ( ".$valueQueue.")";
 
-        $statement = Service::get('db')->prepare($sql);
+        $db = self::getDbConnection();
 
-        $result = $statement->execute($valuesFields);
+        $db->beginTransaction();
+        $db->query($query);
+        $db->commit();
+    }
 
-        if ( $result == true and strcmp( 'Blog\Model\User',  get_called_class())) {
-            Service::get('security')->setUser( $this );
+    /**
+     * Serves for calling functions "findBy*"
+     *
+     * @param $name
+     * @param $arguments
+     * @return bool
+     */
+    static public function __callStatic($name, $arguments) {
+        if (stristr($name, 'findBy') !== false) {
+            $db = self::getDbConnection();
+            $table = static::getTable();
+            $attr = lcfirst(str_replace('findBy', '', $name));
+            $query = $db->prepare("SELECT * FROM {$table} WHERE $attr = :{$attr}");
+            $query->execute(array(":{$attr}" => $arguments[0]));
+            $result = $query->fetchObject();
+            return $result;
+        } else {
+            return false;
         }
-
-        return $result;
     }
 
 }

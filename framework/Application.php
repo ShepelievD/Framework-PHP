@@ -8,9 +8,11 @@ use Framework\Exception\BadResponseTypeException;
 use Framework\Renderer\Renderer;
 use Framework\Request\Request;
 use Framework\Response\Response;
+use Framework\Response\ResponseRedirect;
 use Framework\Router\Router;
 use Framework\Security\Security;
 use Framework\Session\Session;
+use Framework\Exception\AccessDenyException;
 
 
 /**
@@ -25,9 +27,9 @@ class Application {
         if( file_exists( $path )) {
             Service::set('config', include($path));
             Service::set('routes', Service::get('config')['routes']);
-            Service::set('security', new Security());
-            Service::set('session', new Session());
             Service::set('request', new Request());
+            Service::set('session', new Session());
+            Service::set('security', new Security());
 
             $pdoFromConfig = Service::get('config')['pdo'];
             $db = new \PDO( $pdoFromConfig['dns'], $pdoFromConfig['user'], $pdoFromConfig['password']);
@@ -49,12 +51,23 @@ class Application {
 
         try {
             if (!empty($route)) {
+                if( array_key_exists('security', $route) ) {
+
+                    $user = Service::get('security')->getUser();
+                    $allowed = Service::get('security')->checkGrants( $user );
+
+                    if( !$allowed ){
+                        throw new AccessDenyException();
+                    }
+                }
+
+
                 $controllerReflection = new \ReflectionClass($route['controller']);
 
                 $action = $route['action'] . 'Action';
 
                 if ($controllerReflection->hasMethod($action)) {
-                    if( $controllerReflection->isInstantiable() ) {
+                    if ($controllerReflection->isInstantiable()) {
                         $controller = $controllerReflection->newInstance();
                         $actionReflection = $controllerReflection->getMethod($action);
                         $response = $actionReflection->invokeArgs($controller, $route['params']);
@@ -70,6 +83,9 @@ class Application {
             else {
                 throw new HttpNotFoundException('The page has not found');
             }
+        }
+        catch( AccessDenyException $e ){
+            $response = new ResponseRedirect('/login');
         }
         catch( HttpNotFoundException $e ) {
 

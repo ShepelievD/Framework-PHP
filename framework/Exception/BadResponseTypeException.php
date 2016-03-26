@@ -11,6 +11,7 @@ namespace Framework\Exception;
 
 
 class BadResponseTypeException extends \Exception {
+
     public function getParams( ) {
         $params = [ 'message' => $this->getMessage(), 'code' => '500'];
         return $params;
