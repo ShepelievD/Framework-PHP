@@ -8,6 +8,7 @@ use Framework\Response\ResponseRedirect;
 use Framework\Response\Response;
 use Framework\Renderer\Renderer;
 use Framework\Router\Router;
+use Framework\DI\Service;
 
 
 /**
@@ -66,21 +67,19 @@ class Controller{
     /**
      * Generate route for redirect or etc.
      *
-     * @param $routeName
-     * @param array $params
-     * @return mixed|null
+     * @param $name
+     * @param null $id
+     * @return mixed
      */
 
-    public function generateRoute( $routeName, $params = [] ) {
+    public function generateRoute( $name, $id = null ) {
 
-        $routeBuild = Router::$map[$routeName]['pattern'] ?: null;
+        $routes = Service::get('routes');
+        $url = $routes[$name]['pattern'];
 
-        if ($routeBuild && !empty($params)) {
-            foreach ($params as $key => $value) {
-                $routeBuild = preg_replace('~\{' . $key . '\}~', $value, $routeBuild);
-            }
+        if(!is_null($id)){
+            $url = str_replace('{id}', $id, $url);
         }
-
-        return $routeBuild;
+        return $url;
     }
 }
