@@ -9,3 +9,4 @@
         'db.closeDB' => 'Framework\\Event\\Listeners\\DataBaseEvent@closeDB',
         'db.setUTF8' => 'Framework\\Event\\Listeners\\DataBaseEvent@setUTF8',
     );
+    
