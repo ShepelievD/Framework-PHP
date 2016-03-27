@@ -60,28 +60,28 @@ abstract class ActiveRecord {
      */
     public function save() {
 
-        $fieldsForSave = get_object_vars($this);
+        $fieldsForSave = get_object_vars( $this );
 
         $columnQueue = '';
         $valueQueue = '';
 
-        foreach ($fieldsForSave as $key => $value) {
+        foreach( $fieldsForSave as $key => $value ) {
             $columnQueue = $columnQueue . $key . ', ';
-            $valueQueue = $valueQueue . '"' . addslashes(htmlspecialchars($value)) . '", ';
+            $valueQueue = $valueQueue . '"' . addslashes( htmlspecialchars( $value ) ) . '", ';
         }
 
-        var_dump($columnQueue);
-        var_dump($valueQueue);
+        var_dump( $columnQueue );
+        var_dump( $valueQueue );
 
-        $columnQueue = substr($columnQueue, 0, -2);
-        $valueQueue = substr($valueQueue, 0, -2);
+        $columnQueue = substr( $columnQueue, 0, -2 );
+        $valueQueue = substr( $valueQueue, 0, -2 );
 
         $query = "REPLACE INTO " . static::getTable() . "( " . $columnQueue . ") VALUES ( " . $valueQueue . ")";
 
         $db = self::getDbConnection();
 
         $db->beginTransaction();
-        $db->query($query);
+        $db->query( $query );
         $db->commit();
     }
 
@@ -94,17 +94,17 @@ abstract class ActiveRecord {
      */
     static public function __callStatic($name, $arguments) {
 
-        $result = false;
+        $result = null;
 
-        if (stristr($name, 'findBy') !== false) {
+        if( stristr( $name, 'findBy' ) !== false ){
 
             $db = self::getDbConnection();
             $table = static::getTable();
 
-            $attr = lcfirst(str_replace('findBy', '', $name));
+            $attr = lcfirst( str_replace( 'findBy', '', $name ) );
 
-            $query = $db->prepare("SELECT * FROM {$table} WHERE $attr = :{$attr}");
-            $query->execute(array(":{$attr}" => $arguments[0]));
+            $query = $db->prepare( "SELECT * FROM {$table} WHERE $attr = :{$attr}" );
+            $query->execute( [ ":{$attr}" => $arguments[ 0 ] ] );
 
             $resultQuery = $query->fetchObject();
 
@@ -124,8 +124,8 @@ abstract class ActiveRecord {
         $db = self::getDbConnection();
         $table = static::getTable();
 
-        if(is_numeric( $id )){
-            $query = $db->prepare("DELETE FROM $table WHERE id = " . $id . ";");
+        if( is_numeric( $id ) ){
+            $query = $db->prepare( "DELETE FROM $table WHERE id = " . $id . ";" );
             $query->execute();
         }
     }

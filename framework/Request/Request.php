@@ -11,7 +11,7 @@ class Request {
      */
 
     public function getMethod() {
-        return $_SERVER['REQUEST_METHOD'];
+        return $_SERVER[ 'REQUEST_METHOD' ];
     }
 
     /**
@@ -31,7 +31,7 @@ class Request {
      */
 
     public function isGet() {
-        return ( $this->getMethod() == 'GET') ;
+        return ( $this->getMethod() == 'GET' );
     }
 
     /**

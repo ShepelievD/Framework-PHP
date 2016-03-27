@@ -42,11 +42,12 @@ class Response {
      * @var array
      */
 
-    public static $codeMessage = array(
+    public static $codeMessage = [
         200 => 'OK',
         302 => 'FOUND',
         404 => 'NOT FOUND',
-    );
+        500 => 'BAD RESPONSE',
+    ];
 
     /**
      * Response constructor.

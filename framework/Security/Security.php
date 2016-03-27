@@ -78,7 +78,7 @@ class Security {
 
     public function getUser() {
         $result = null;
-        if ($this->session->getParameter( 'isAuthenticated' )) {
+        if( $this->session->getParameter( 'isAuthenticated' ) ){
             $user = new User();
             $user->email = $this->session->getParameter( 'userName' );
             $result = $user;
@@ -92,9 +92,8 @@ class Security {
      * @return string
      */
 
-    public function generateToken()
-    {
-        $token = md5(mktime());
+    public function generateToken() {
+        $token = md5( mktime() );
         $this->session->putParameter( 'token', $token );
         return $token;
     }
@@ -105,18 +104,21 @@ class Security {
      * @return bool
      */
     public function isTokenCorrect() {
+
         $request = Service::get( 'request' );
-        $token   = null;
-        if ($request->parameterExist( 'token' )) {
+        $token = null;
+
+        if( $request->parameterExist( 'token' ) ){
             $token = $request->get( 'token' );
         }
-        if ( $token != null ) {
+
+        $result = false;
+        if( $token != null ){
             $tokenFromSession = $this->session->getParameter( 'token' );
-            return $tokenFromSession == $token?true:false;
+            $result = $tokenFromSession == $token;
         }
-        else {
-            return true;
-        }
+
+        return $result;
     }
 
     /**
