@@ -88,7 +88,7 @@ class Response {
 
     public function sendHeaders(){
 
-        header($_SERVER['SERVER_PROTOCOL'].' '.$this->code.' '.self::$codeMessage[$this->code]);
+        header($_SERVER['SERVER_PROTOCOL'] . ' ' . $this->code. ' ' . self::$codeMessage[$this->code]);
 
         foreach($this->headers as $key => $value){
             header(sprintf("%s: %s", $key, $value));

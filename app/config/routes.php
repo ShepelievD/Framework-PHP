@@ -35,6 +35,7 @@ return array(
         'pattern'       => '/profile',
         'controller'    => 'CMS\\Controller\\ProfileController',
         'action'        => 'update',
+        'security'   => array('ROLE_USER'),
         '_requirements' => array(
             '_method' => 'POST'
         )
@@ -42,7 +43,8 @@ return array(
     'profile'        => array(
         'pattern'    => '/profile',
         'controller' => 'CMS\\Controller\\ProfileController',
-        'action'     => 'get'
+        'action'     => 'get',
+        'security'   => array('ROLE_USER'),
     ),
     'add_post'       => array(
         'pattern'    => '/posts/add',
@@ -62,10 +64,22 @@ return array(
         'pattern'       => '/posts/{id}/edit',
         'controller'    => 'CMS\\Controller\\BlogController',
         'action'        => 'edit',
+        'security'   => array('ROLE_USER'),
         '_requirements' => array(
             'id'      => '\d+',
             '_method' => 'POST'
         )
-
-    )
+    ),
+    /**
+     * Route for removing post
+     */
+    'remove_post'    => [
+        'pattern'       => '/posts/{id}/remove',
+        'controller'    => 'CMS\\Controller\\BlogController',
+        'action'        => 'remove',
+        'security'   => ['ROLE_USER'],
+        '_requirements' => [
+            'id'      => '\d+',
+        ]
+    ],
 );

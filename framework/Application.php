@@ -7,12 +7,9 @@ use Framework\Event\Event;
 use Framework\Exception\HttpNotFoundException;
 use Framework\Exception\BadResponseTypeException;
 use Framework\Renderer\Renderer;
-use Framework\Request\Request;
 use Framework\Response\Response;
 use Framework\Response\ResponseRedirect;
 use Framework\Router\Router;
-use Framework\Security\Security;
-use Framework\Session\Session;
 use Framework\Exception\AccessDenyException;
 
 
@@ -63,6 +60,10 @@ class Application {
         try {
 
             if (!empty($route)) {
+
+                /**
+                 * Checks the route is allowed for all or not
+                 */
                 if( array_key_exists('security', $route) ) {
 
                     $user = Service::get('security')->getUser();
@@ -83,6 +84,10 @@ class Application {
                         $controller = $controllerReflection->newInstance();
                         $actionReflection = $controllerReflection->getMethod($action);
                         $response = $actionReflection->invokeArgs($controller, $route['params']);
+
+                        if( !$response instanceof Response ){
+                            $response = new Response();
+                        }
                     }
                     else {
                         throw new BadResponseTypeException('Bad response');
@@ -120,6 +125,7 @@ class Application {
         catch( \Exception $e ) {
             $response = new Response( $e->getMessage(), 'text/html', '200' );
         }
+
         $response->send();
     }
 }

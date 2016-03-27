@@ -26,7 +26,7 @@ class Security {
      * @var array
      */
 
-    protected static $allowedGrants = [
+    public static $allowedGrants = [
         'poster' => 'ROLE_USER',
     ];
 

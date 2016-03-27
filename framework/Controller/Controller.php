@@ -30,8 +30,14 @@ class Controller{
 
         $calledClassName = get_called_class();
 
-        $viewDir = str_replace('Controller', '', str_replace('Blog\\Controller\\', '', $calledClassName));
-        $template = __DIR__.'/../../src/Blog/views/'.$viewDir.'/'.$template.'.php';
+        $segments = explode('\\',$calledClassName);
+
+        $bundleName = $segments[0];
+        $controllerName = $segments[2];
+
+        $controllerName = str_replace('Controller', '', $controllerName);
+
+        $template = realpath(__DIR__.'/../../src/'.$bundleName.'/views/'.$controllerName.'/'.$template.'.php');
 
         $renderer = new Renderer( );
         $content = $renderer->render( $template, $date );

@@ -28,25 +28,24 @@ abstract class ActiveRecord {
      * @return array
      */
 
-    static function find( $id = 'all' ) {
+    static function find($id = 'all') {
 
         $db = ActiveRecord::getDbConnection();
         $table = static::getTable();
 
-        if ( $id == 'all' ) {
+        if ($id == 'all') {
 
             $result = [];
 
-            $query = $db->prepare( "SELECT * FROM $table ORDER BY id" );
+            $query = $db->prepare("SELECT * FROM $table ORDER BY id");
             $query->execute();
 
-            while ( $row = $query->fetchObject() ) {
-                array_push( $result, $row );
+            while ($row = $query->fetchObject()) {
+                array_push($result, $row);
             }
-        }
-        else {
-            $query = $db->prepare( "SELECT * FROM $table WHERE id = :id" );
-            $query->execute( [ ':id' => $id ] );
+        } else {
+            $query = $db->prepare("SELECT * FROM $table WHERE id = :id");
+            $query->execute([':id' => $id]);
 
             $result = $query->fetchObject();
         }
@@ -68,13 +67,16 @@ abstract class ActiveRecord {
 
         foreach ($fieldsForSave as $key => $value) {
             $columnQueue = $columnQueue . $key . ', ';
-            $valueQueue = $valueQueue . '"' . addslashes(htmlspecialchars( $value )) . '", ';
+            $valueQueue = $valueQueue . '"' . addslashes(htmlspecialchars($value)) . '", ';
         }
+
+        var_dump($columnQueue);
+        var_dump($valueQueue);
 
         $columnQueue = substr($columnQueue, 0, -2);
         $valueQueue = substr($valueQueue, 0, -2);
 
-        $query = "REPLACE INTO " . static::getTable() . "( " . $columnQueue . ") VALUES ( ".$valueQueue.")";
+        $query = "REPLACE INTO " . static::getTable() . "( " . $columnQueue . ") VALUES ( " . $valueQueue . ")";
 
         $db = self::getDbConnection();
 
@@ -91,17 +93,40 @@ abstract class ActiveRecord {
      * @return bool
      */
     static public function __callStatic($name, $arguments) {
+
+        $result = false;
+
         if (stristr($name, 'findBy') !== false) {
+
             $db = self::getDbConnection();
             $table = static::getTable();
+
             $attr = lcfirst(str_replace('findBy', '', $name));
+
             $query = $db->prepare("SELECT * FROM {$table} WHERE $attr = :{$attr}");
             $query->execute(array(":{$attr}" => $arguments[0]));
-            $result = $query->fetchObject();
-            return $result;
-        } else {
-            return false;
+
+            $resultQuery = $query->fetchObject();
+
+            $result = $resultQuery;
         }
+        return $result;
     }
 
+    /**
+     * Removes post from DB
+     *
+     * @param $id
+     */
+
+    static function remove( $id ) {
+
+        $db = self::getDbConnection();
+        $table = static::getTable();
+
+        if(is_numeric( $id )){
+            $query = $db->prepare("DELETE FROM $table WHERE id = " . $id . ";");
+            $query->execute();
+        }
+    }
 }
