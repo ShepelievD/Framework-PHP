@@ -3,6 +3,7 @@
 namespace Framework;
 
 use Framework\DI\Service;
+use Framework\Event\Event;
 use Framework\Exception\HttpNotFoundException;
 use Framework\Exception\BadResponseTypeException;
 use Framework\Renderer\Renderer;
@@ -22,20 +23,30 @@ use Framework\Exception\AccessDenyException;
 
 class Application {
 
+    private $pathEvent = [];
+
     public function __construct( $path ) {
 
         if( file_exists( $path )) {
+
             Service::set('config', include($path));
-            Service::set('routes', Service::get('config')['routes']);
-            Service::set('request', new Request());
-            Service::set('session', new Session());
-            Service::set('security', new Security());
 
-            $pdoFromConfig = Service::get('config')['pdo'];
-            $db = new \PDO( $pdoFromConfig['dns'], $pdoFromConfig['user'], $pdoFromConfig['password']);
+            $pathEvents = realpath(str_replace('config.php', 'events.php', $path));
+            $this->pathEvent = $pathEvents;
 
-            Service::set('db', $db);
+            $event = new Event( $this->pathEvent );
+            $event->trigger('app.init');
+            $event->trigger('db.setUTF8');
         }
+    }
+
+    /**
+     * Destructor for closing DB connection
+     */
+
+    public function __destruct() {
+        $event = new Event( $this->pathEvent );
+        $event->trigger('db.closeDB');
     }
 
     /**
@@ -50,6 +61,7 @@ class Application {
         Service::set('currentRoute', $route);
 
         try {
+
             if (!empty($route)) {
                 if( array_key_exists('security', $route) ) {
 

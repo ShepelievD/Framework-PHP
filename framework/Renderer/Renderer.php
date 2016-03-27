@@ -79,7 +79,7 @@ class Renderer {
         $getRoute = function($name){
             if( array_key_exists( $name, Service::get('routes'))) {
                 $uri = Service::get('routes')[$name]['pattern'];
-                echo $uri;
+                return $uri;
             }
         };
 
