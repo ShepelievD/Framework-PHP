@@ -80,11 +80,11 @@ class Controller{
 
     public function generateRoute( $name, $id = null ) {
 
-        $routes = Service::get('routes');
-        $url = $routes[$name]['pattern'];
+        $routes = Service::get( 'routes' );
+        $url = $routes[ $name ][ 'pattern' ];
 
-        if(!is_null($id)){
-            $url = str_replace('{id}', $id, $url);
+        if( !is_null( $id ) ){
+            $url = str_replace( '{id}', $id, $url );
         }
         return $url;
     }

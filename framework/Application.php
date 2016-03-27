@@ -59,15 +59,15 @@ class Application {
 
         try {
 
-            if (!empty($route)) {
+            if( !empty( $route ) ){
 
                 /**
                  * Checks the route is allowed for all or not
                  */
-                if( array_key_exists('security', $route) ) {
+                if( array_key_exists( 'security', $route ) ){
 
-                    $user = Service::get('security')->getUser();
-                    $allowed = Service::get('security')->checkGrants( $user );
+                    $user = Service::get( 'security' )->getUser();
+                    $allowed = Service::get( 'security' )->checkGrants( $user );
 
                     if( !$allowed ){
                         throw new AccessDenyException();
@@ -86,7 +86,7 @@ class Application {
                         $response = $actionReflection->invokeArgs($controller, $route['params']);
 
                         if( !$response instanceof Response ){
-                            $response = new Response();
+                            throw new BadResponseTypeException('Bad response');
                         }
                     }
                     else {

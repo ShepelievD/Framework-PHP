@@ -61,24 +61,24 @@ class Renderer {
 
         $templatePath = realpath( $templatePath );
 
-        $include = function($controller, $action, $args = array()) {
+        $include = function ( $controller, $action, $args = array() ) {
             $controllerInstance = new $controller();
-            if ($args === null) {
+            if( $args === null ){
                 $args = array();
             }
 
-            return call_user_func_array(array($controllerInstance, $action.'Action'), $args);
+            return call_user_func_array( array( $controllerInstance, $action . 'Action' ), $args );
         };
 
-        $generateToken = function(){
-            $token = md5('solt_string'.uniqid());
-            setcookie('token', $token);
-            echo '<input type="hidden" value="'.$token.'" name="token">';
+        $generateToken = function () {
+            $token = md5( 'solt_string' . uniqid() );
+            setcookie( 'token', $token );
+            echo '<input type="hidden" value="' . $token . '" name="token">';
         };
 
-        $getRoute = function($name){
-            if( array_key_exists( $name, Service::get('routes'))) {
-                $uri = Service::get('routes')[$name]['pattern'];
+        $getRoute = function ( $name ) {
+            if( array_key_exists( $name, Service::get( 'routes' ) ) ){
+                $uri = Service::get( 'routes' )[ $name ][ 'pattern' ];
                 return $uri;
             }
         };
@@ -87,15 +87,15 @@ class Renderer {
 
         ob_start();
 
-        if( file_exists( $templatePath )) {
-            include($templatePath);
+        if( file_exists( $templatePath ) ){
+            include( $templatePath );
         }
         $content = ob_get_contents();
 
         ob_end_clean();
 
-        if($wrap){
-            $content = $this->renderMain($content);
+        if( $wrap ){
+            $content = $this->renderMain( $content );
         }
 
         return $content;

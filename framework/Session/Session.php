@@ -22,8 +22,8 @@ class Session {
      * @param $parameter
      * @return bool
      */
-    public function hasParameter($parameter) {
-        return array_key_exists($parameter, $_SESSION);
+    public function hasParameter( $parameter ) {
+        return array_key_exists( $parameter, $_SESSION );
     }
 
     /**
@@ -35,13 +35,13 @@ class Session {
      * @param bool|true $rewrite
      */
 
-    public function putParameter($parameter, $value, $rewrite = true) {
-        if ($this -> hasParameter($parameter)) {
-            if ($rewrite) {
-                $_SESSION[$parameter] = $value;
+    public function putParameter( $parameter, $value, $rewrite = true ) {
+        if( $this->hasParameter( $parameter ) ){
+            if( $rewrite ){
+                $_SESSION[ $parameter ] = $value;
             }
-        } else {
-            $_SESSION[$parameter] = $value;
+        }else{
+            $_SESSION[ $parameter ] = $value;
         }
     }
 
@@ -51,11 +51,10 @@ class Session {
      * @param $parameter
      */
 
-    public function removeParameter ($parameter) {
-        if ($this->hasParameter($parameter)) {
-            unset($_SESSION[$parameter]);
+    public function removeParameter ( $parameter ) {
+        if( $this->hasParameter( $parameter ) ){
+            unset( $_SESSION[ $parameter ] );
         }
-
     }
 
     /**
@@ -67,8 +66,8 @@ class Session {
 
     public function getParameter ($parameter) {
         $result = null;
-        if ($this->hasParameter($parameter)) {
-            $result = $_SESSION[$parameter];
+        if( $this->hasParameter( $parameter ) ){
+            $result = $_SESSION[ $parameter ];
         }
         return $result;
     }
@@ -77,7 +76,7 @@ class Session {
      * Starts the sessions
      */
     private function startSession() {
-        if (session_status() == PHP_SESSION_NONE) {
+        if( session_status() == PHP_SESSION_NONE ){
             session_start();
         }
     }

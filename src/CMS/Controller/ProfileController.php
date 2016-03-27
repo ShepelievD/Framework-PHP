@@ -24,36 +24,38 @@ class ProfileController extends Controller {
 
     function updateAction() {
 
-        if ($this->getRequest()->isPost()) {
+        if( $this->getRequest()->isPost() ){
 
             try {
                 $user = new User();
-                $user->id = (int) $this->getRequest()->post('id');
-                $user->email = $this->getRequest()->post('email');
-                $user->password = $this->getRequest()->post('password');
+                $user->id = (int)$this->getRequest()->post( 'id' );
+                $user->email = $this->getRequest()->post( 'email' );
+                $user->password = $this->getRequest()->post( 'password' );
                 $user->role = 'ROLE_USER';
 
                 $user->save();
 
-                Service::get('security')->clear();
+                Service::get( 'security' )->clear();
 
-                return $this->redirect($this->generateRoute('home'), 'The user data has been update successfully');
+                return $this->redirect( $this->generateRoute( 'login' ), 'The user data has been update successfully' );
+
             }
-            catch (DatabaseException $e) {
+            catch( DatabaseException $e ) {
                 $error = $e->getMessage();
             }
         }
-        $currentUser = Service::get('security')->getUser();
+
+        $currentUser = Service::get( 'security' )->getUser();
         $userEmail = $currentUser->email;
         $user = User::findByEmail( $userEmail );
+        $segments = explode( '@', $userEmail );
 
-        $segments = explode('@', $userEmail);
+        $user->name = $segments[ 0 ];
 
-        $user->name = $segments[0];
-        $date['updateUser'] = $user;
-        $date['action'] = $this->generateRoute('profile');
+        $date[ 'updateUser' ] = $user;
+        $date[ 'action' ] = $this->generateRoute( 'profile' );
+        $date[ 'errors' ] = isset( $error ) ? $error : null;
 
-        return $this->render('update.html', $date);
+        return $this->render( 'update.html', $date );
     }
-
 }
